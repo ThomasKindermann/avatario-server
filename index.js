@@ -27,7 +27,7 @@ let testNumber = 0;
 
 // client connects
 io.on("connection", (socket) => {
-  console.log(" user connected");
+  console.log("connected");
 
   // initial response for test
   io.emit("mutated", testNumber);
@@ -46,6 +46,11 @@ io.on("connection", (socket) => {
     console.log(name + " has joined");
     // respond Full Avatar List to client
     io.emit("floorData", { avatars: getAvatars() });
+
+    // remove If when test removed
+    if (getAvatar(socket.id)) {
+      console.log("users connected: ", getAvatars().length);
+    }
   });
 
   // Update position on client avatar
@@ -58,13 +63,21 @@ io.on("connection", (socket) => {
 
   // user Disconnects
   socket.on("disconnect", () => {
-    //remove Avatar from avatar list
+    // remove If when test removed
+    if (getAvatar(socket.id)) {
+      console.log(getAvatar(socket.id).name + " disconnected");
+    }
     removeAvatar(socket.id);
-
-    console.log("disconnected");
 
     //respond entire avatarlist to clients
     io.emit("floorData", { avatars: getAvatars() });
+
+    // remove If when test removed
+    if (getAvatars()) {
+      console.log("users connected: ", getAvatars().length);
+    }
+
+    //remove Avatar from avatar list
   });
 });
 
