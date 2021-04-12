@@ -57,8 +57,9 @@ io.on("connection", (socket) => {
   socket.on("update", ({ x, y }) => {
     // updates Avatar in List
     updateAvatar(socket.id, x, y);
+    io.emit("floorData", { avatars: getAvatars() });
     // responds to clients with updated client positions
-    io.emit("updateFloor", { updatedAvatar: getAvatar(socket.id) });
+    //io.emit("updateFloor", { updatedAvatar: getAvatar(socket.id) });
   });
 
   // user Disconnects
