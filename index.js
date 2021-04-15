@@ -39,24 +39,27 @@ io.on("connection", (socket) => {
 
   // Update position on client avatar
   socket.on("update", ({ x, y }) => {
-    // updates Avatar in List
-    updateAvatar(socket.id, x, y);
-    //responds to client with updated avatar list
-    io.emit("floorData", { avatars: getAvatars() });
+    if (getAvatar(socket.id)) {
+      // updates Avatar in List
+      updateAvatar(socket.id, x, y);
+      //responds to client with updated avatar list
+      io.emit("floorData", { avatars: getAvatars() });
+    }
   });
 
   // user Disconnects
   socket.on("disconnect", () => {
-    console.log(getAvatar(socket.id).name + " disconnected");
+    if (getAvatar(socket.id)) {
+      console.log(getAvatar(socket.id).name + " disconnected");
 
-    removeAvatar(socket.id);
+      //remove Avatar from avatar list
+      removeAvatar(socket.id);
 
-    //respond entire avatarlist to clients
-    io.emit("floorData", { avatars: getAvatars() });
+      //respond entire avatarlist to clients
+      io.emit("floorData", { avatars: getAvatars() });
 
-    console.log("users connected: ", getAvatars().length);
-
-    //remove Avatar from avatar list
+      console.log("users connected: ", getAvatars().length);
+    }
   });
 });
 
